@@ -1,0 +1,3 @@
+NSCameraUsageDescription = "MyWellness utilizza la fotocamera per analizzare le calorie degli alimenti, scansionare le etichette nutrizionali e scattare foto per il body scan.";
+NSHealthShareUsageDescription = "MyWellness legge i dati sulla salute tra cui passi, sonno, frequenza cardiaca, HRV e saturazione di ossigeno per calcolare il tuo punteggio di benessere personale.";
+NSPhotoLibraryUsageDescription = "MyWellness accede alla tua libreria foto per analizzare gli alimenti e le etichette nutrizionali.";

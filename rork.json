@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "My Wellness",
+      "path": "ios",
+      "framework": "swift"
+    }
+  ]
+}
