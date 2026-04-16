@@ -27,60 +27,51 @@ struct ContentView: View {
     }
 
     var body: some View {
-        GeometryReader { geo in
-            let size = min(geo.size.width, geo.size.height)
-            ZStack {
-                memojiRingSection
-                constellationStats(containerSize: size)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        ZStack {
+            constellationStats
+            memojiRingSection
         }
-        .ignoresSafeArea(edges: .bottom)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .ignoresSafeArea()
     }
 
     private var memojiRingSection: some View {
-        VStack(spacing: 2) {
-            ZStack {
-                Circle()
-                    .stroke(Color.gray.opacity(0.22), lineWidth: 5)
-                    .frame(width: 86, height: 86)
+        ZStack {
+            Circle()
+                .stroke(Color.gray.opacity(0.22), lineWidth: 5)
+                .frame(width: 78, height: 78)
 
-                Circle()
-                    .trim(from: 0, to: session.wellnessScore)
-                    .stroke(
-                        moodColor,
-                        style: StrokeStyle(lineWidth: 5, lineCap: .round)
-                    )
-                    .frame(width: 86, height: 86)
-                    .rotationEffect(.degrees(-90))
+            Circle()
+                .trim(from: 0, to: session.wellnessScore)
+                .stroke(
+                    moodColor,
+                    style: StrokeStyle(lineWidth: 5, lineCap: .round)
+                )
+                .frame(width: 78, height: 78)
+                .rotationEffect(.degrees(-90))
 
-                if let data = session.memojiData, let uiImage = UIImage(data: data) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 62, height: 62)
-                        .clipShape(.circle)
-                } else {
-                    Image(systemName: "face.smiling.inverse")
-                        .font(.system(size: 32, weight: .medium))
+            if let data = session.memojiData, let uiImage = UIImage(data: data) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 58, height: 58)
+                    .clipShape(.circle)
+            } else {
+                VStack(spacing: 2) {
+                    Image(systemName: "face.smiling")
+                        .font(.system(size: 24, weight: .medium))
+                        .foregroundStyle(moodColor)
+                    Text("\(Int(session.wellnessScore * 100))%")
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
                         .foregroundStyle(moodColor)
                 }
             }
-
-            Text(session.moodLabel)
-                .font(.system(size: 11, weight: .bold, design: .rounded))
-                .foregroundStyle(moodColor)
-                .lineLimit(1)
-
-            Text("\(Int(session.wellnessScore * 100))%")
-                .font(.system(size: 10, weight: .semibold, design: .rounded))
-                .foregroundStyle(.secondary)
         }
     }
 
-    private func constellationStats(containerSize: CGFloat) -> some View {
-        VStack {
-            HStack {
+    private var constellationStats: some View {
+        VStack(spacing: 0) {
+            HStack(alignment: .top) {
                 ConstellationStat(
                     icon: "figure.walk",
                     value: session.steps > 0 ? formatNumber(Double(session.steps)) : "--",
@@ -96,7 +87,7 @@ struct ContentView: View {
                 )
             }
             Spacer(minLength: 0)
-            HStack {
+            HStack(alignment: .bottom) {
                 ConstellationStat(
                     icon: "moon.zzz.fill",
                     value: session.sleepHours > 0 ? String(format: "%.1f", session.sleepHours) : "--",
@@ -112,8 +103,9 @@ struct ContentView: View {
                 )
             }
         }
-        .padding(.horizontal, 2)
-        .padding(.vertical, 2)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 4)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func formatNumber(_ value: Double) -> String {

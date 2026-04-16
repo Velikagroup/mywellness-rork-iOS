@@ -52,16 +52,16 @@ class WatchSessionService: NSObject {
     }
 
     private func applyContext(_ context: [String: Any]) {
-        steps = context["widget_steps"] as? Int ?? 0
-        bpm = context["widget_bpm"] as? Int ?? 0
-        sleepHours = context["widget_sleepHours"] as? Double ?? 0
-        activeCalories = context["widget_activeCalories"] as? Int ?? 0
-        wellnessScore = context["widget_wellnessScore"] as? Double ?? 0.5
-        moodLabel = context["widget_moodLabel"] as? String ?? "---"
-        moodColorR = context["widget_moodColorR"] as? Double ?? 0.17
-        moodColorG = context["widget_moodColorG"] as? Double ?? 0.60
-        moodColorB = context["widget_moodColorB"] as? Double ?? 0.52
-        memojiData = context["widget_memojiData"] as? Data
+        if let v = context["widget_steps"] as? Int { steps = v }
+        if let v = context["widget_bpm"] as? Int { bpm = v }
+        if let v = context["widget_sleepHours"] as? Double { sleepHours = v }
+        if let v = context["widget_activeCalories"] as? Int { activeCalories = v }
+        if let v = context["widget_wellnessScore"] as? Double { wellnessScore = v }
+        if let v = context["widget_moodLabel"] as? String { moodLabel = v }
+        if let v = context["widget_moodColorR"] as? Double { moodColorR = v }
+        if let v = context["widget_moodColorG"] as? Double { moodColorG = v }
+        if let v = context["widget_moodColorB"] as? Double { moodColorB = v }
+        if let v = context["widget_memojiData"] as? Data { memojiData = v }
         saveToDisk()
     }
 
