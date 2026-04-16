@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		XX298127CFBB2CF3FA631BXX /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = XXDCC169DE7B2F3C1C8B10XX /* RevenueCat */; };
 		XX387710D218C84D34415FXX /* MyWellnessWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = XX771FAE53E2C2B2CEB2FEXX /* MyWellnessWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		XX7BDC04D300C6B7D1DC6DXX /* MyWellnessWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = XXC462265AA7A6108D8758XX /* MyWellnessWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		XXC2732D520C02064817F5XX /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = XXB48B343CDA2FFA072770XX /* GoogleSignIn */; };
 /* End PBXBuildFile section */
 
@@ -34,6 +35,13 @@
 			remoteGlobalIDString = XX03A577560A14595056F9XX;
 			remoteInfo = MyWellnessWidget;
 		};
+		XX84DC8237805955D91ADBXX /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 105FC5722E9EAD3100EA8BCF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = XX06DCDC05723FB08CBAAFXX;
+			remoteInfo = MyWellnessWatch;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,6 +56,17 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		XXCF30E82A8A7FCA30E06EXX /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				XX7BDC04D300C6B7D1DC6DXX /* MyWellnessWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +74,7 @@
 		105FC5892E9EAD3200EA8BCF /* MyWellnessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyWellnessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		105FC5932E9EAD3200EA8BCF /* MyWellnessUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyWellnessUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		XX771FAE53E2C2B2CEB2FEXX /* MyWellnessWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MyWellnessWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		XXC462265AA7A6108D8758XX /* MyWellnessWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyWellnessWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -74,6 +94,14 @@
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		XX286C5CDA62FBE295724DXX /* MyWellnessWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MyWellnessWatch;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		105FC5772E9EAD3100EA8BCF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -92,6 +120,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		105FC5902E9EAD3200EA8BCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		XX28A9A27FCA465D91AA27XX /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -145,6 +180,7 @@
 				105FC5962E9EAD3200EA8BCF /* MyWellnessUITests */,
 				105FC57B2E9EAD3100EA8BCF /* Products */,
 				XXE60DD25F6B5FAA5101ECXX /* MyWellnessWidget */,
+				XX286C5CDA62FBE295724DXX /* MyWellnessWatch */,
 			);
 			sourceTree = "<group>";
 		};
@@ -155,6 +191,7 @@
 				105FC5892E9EAD3200EA8BCF /* MyWellnessTests.xctest */,
 				105FC5932E9EAD3200EA8BCF /* MyWellnessUITests.xctest */,
 				XX771FAE53E2C2B2CEB2FEXX /* MyWellnessWidget.appex */,
+				XXC462265AA7A6108D8758XX /* MyWellnessWatch.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,11 +207,13 @@
 				105FC5772E9EAD3100EA8BCF /* Frameworks */,
 				105FC5782E9EAD3100EA8BCF /* Resources */,
 				XXC11602A55AD9C9893DFDXX /* Embed Foundation Extensions */,
+				XXCF30E82A8A7FCA30E06EXX /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				XXC05568B3D57A2A198982XX /* PBXTargetDependency */,
+				XX4BC35F51A07D272D35ECXX /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				105FC57C2E9EAD3100EA8BCF /* MyWellness */,
@@ -254,6 +293,26 @@
 				XXE60DD25F6B5FAA5101ECXX /* MyWellnessWidget */,
 			);
 		};
+		XX06DCDC05723FB08CBAAFXX /* MyWellnessWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = XX9189698254940F1B0177XX /* Build configuration list for PBXNativeTarget "MyWellnessWatch" */;
+			buildPhases = (
+				XX178B45C53EB340DB4155XX /* Sources */,
+				XX28A9A27FCA465D91AA27XX /* Frameworks */,
+				XX4FEB6E8356710642DD83XX /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MyWellnessWatch;
+			productName = MyWellnessWatch;
+			productReference = XXC462265AA7A6108D8758XX /* MyWellnessWatch.app */;
+			productType = "com.apple.product-type.application";
+			fileSystemSynchronizedGroups = (
+				XX286C5CDA62FBE295724DXX /* MyWellnessWatch */,
+			);
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -300,6 +359,7 @@
 				105FC5882E9EAD3200EA8BCF /* MyWellnessTests */,
 				105FC5922E9EAD3200EA8BCF /* MyWellnessUITests */,
 				XX03A577560A14595056F9XX /* MyWellnessWidget */,
+				XX06DCDC05723FB08CBAAFXX /* MyWellnessWatch */,
 			);
 			packageReferences = (
 				XX4AC81916604C4344ADC0XX /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
@@ -324,6 +384,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		105FC5912E9EAD3200EA8BCF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		XX4FEB6E8356710642DD83XX /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -361,6 +428,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		XX178B45C53EB340DB4155XX /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		XXE0FD6AFA7551401BFCEBXX /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -380,6 +454,11 @@
 			isa = PBXTargetDependency;
 			target = 105FC5792E9EAD3100EA8BCF /* MyWellness */;
 			targetProxy = 105FC5942E9EAD3200EA8BCF /* PBXContainerItemProxy */;
+		};
+		XX4BC35F51A07D272D35ECXX /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = XX06DCDC05723FB08CBAAFXX /* MyWellnessWatch */;
+			targetProxy = XX84DC8237805955D91ADBXX /* PBXContainerItemProxy */;
 		};
 		XXC05568B3D57A2A198982XX /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -676,6 +755,35 @@
 			};
 			name = Release;
 		};
+		XX70143453DA2717AA5055XX /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = app.rork.zdxfa09dhovxfuxepqeqb.mywellnesswatch;
+				PRODUCT_NAME = MyWellnessWatch;
+				SWIFT_VERSION = 5.0;
+				SDKROOT = watchos;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				GENERATE_INFOPLIST_FILE = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				TARGETED_DEVICE_FAMILY = 4;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				ENABLE_PREVIEWS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.rork.zdxfa09dhovxfuxepqeqb;
+				CODE_SIGN_ENTITLEMENTS = MyWellnessWatch/MyWellnessWatch.entitlements;
+			};
+			name = Release;
+		};
 		XX7B54D7C0A9CF299D1256XX /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -696,6 +804,35 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				CODE_SIGN_ENTITLEMENTS = MyWellnessWidget/MyWellnessWidget.entitlements;
+			};
+			name = Debug;
+		};
+		XXB80F5B2FD777933C2B66XX /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = app.rork.zdxfa09dhovxfuxepqeqb.mywellnesswatch;
+				PRODUCT_NAME = MyWellnessWatch;
+				SWIFT_VERSION = 5.0;
+				SDKROOT = watchos;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				GENERATE_INFOPLIST_FILE = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				TARGETED_DEVICE_FAMILY = 4;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				ENABLE_PREVIEWS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = app.rork.zdxfa09dhovxfuxepqeqb;
+				CODE_SIGN_ENTITLEMENTS = MyWellnessWatch/MyWellnessWatch.entitlements;
 			};
 			name = Debug;
 		};
@@ -766,6 +903,15 @@
 			buildConfigurations = (
 				XX7B54D7C0A9CF299D1256XX /* Debug */,
 				XXCDD0132A80EEB33FE233XX /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		XX9189698254940F1B0177XX /* Build configuration list for PBXNativeTarget "MyWellnessWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				XXB80F5B2FD777933C2B66XX /* Debug */,
+				XX70143453DA2717AA5055XX /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
