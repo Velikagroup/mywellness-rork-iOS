@@ -1,7 +1,5 @@
 import SwiftUI
 
-private let appGroupID = "group.app.rork.zdxfa09dhovxfuxepqeqb"
-
 private enum WatchLang {
     private static var code: String {
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
@@ -22,19 +20,10 @@ private enum WatchLang {
 }
 
 struct ContentView: View {
-    @State private var steps: Int = 0
-    @State private var bpm: Int = 0
-    @State private var sleepHours: Double = 0
-    @State private var activeCalories: Int = 0
-    @State private var wellnessScore: Double = 0.5
-    @State private var moodLabel: String = "---"
-    @State private var moodColorR: Double = 0.17
-    @State private var moodColorG: Double = 0.60
-    @State private var moodColorB: Double = 0.52
-    @State private var memojiData: Data? = nil
+    @State private var session = WatchSessionService.shared
 
     private var moodColor: Color {
-        Color(red: moodColorR, green: moodColorG, blue: moodColorB)
+        Color(red: session.moodColorR, green: session.moodColorG, blue: session.moodColorB)
     }
 
     var body: some View {
@@ -45,7 +34,6 @@ struct ContentView: View {
             }
             .padding(.horizontal, 4)
         }
-        .onAppear { loadData() }
     }
 
     private var memojiRingSection: some View {
@@ -60,7 +48,7 @@ struct ContentView: View {
                     .frame(width: 90, height: 90)
 
                 Circle()
-                    .trim(from: 0, to: wellnessScore)
+                    .trim(from: 0, to: session.wellnessScore)
                     .stroke(
                         moodColor,
                         style: StrokeStyle(lineWidth: 5, lineCap: .round)
@@ -68,7 +56,7 @@ struct ContentView: View {
                     .frame(width: 90, height: 90)
                     .rotationEffect(.degrees(-90))
 
-                if let data = memojiData, let uiImage = UIImage(data: data) {
+                if let data = session.memojiData, let uiImage = UIImage(data: data) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -81,12 +69,12 @@ struct ContentView: View {
                 }
             }
 
-            Text(moodLabel)
+            Text(session.moodLabel)
                 .font(.system(size: 12, weight: .bold, design: .rounded))
                 .foregroundStyle(moodColor)
                 .lineLimit(1)
 
-            Text("\(Int(wellnessScore * 100))%")
+            Text("\(Int(session.wellnessScore * 100))%")
                 .font(.system(size: 11, weight: .semibold, design: .rounded))
                 .foregroundStyle(.secondary)
         }
@@ -101,43 +89,29 @@ struct ContentView: View {
         return LazyVGrid(columns: columns, spacing: 6) {
             WatchStatCell(
                 icon: "figure.walk",
-                value: steps > 0 ? formatNumber(Double(steps)) : "--",
+                value: session.steps > 0 ? formatNumber(Double(session.steps)) : "--",
                 label: WatchLang.s("steps"),
                 color: .blue
             )
             WatchStatCell(
                 icon: "heart.fill",
-                value: bpm > 25 ? "\(bpm)" : "--",
+                value: session.bpm > 25 ? "\(session.bpm)" : "--",
                 label: WatchLang.s("bpm"),
                 color: .red
             )
             WatchStatCell(
                 icon: "moon.zzz.fill",
-                value: sleepHours > 0 ? String(format: "%.1f", sleepHours) : "--",
+                value: session.sleepHours > 0 ? String(format: "%.1f", session.sleepHours) : "--",
                 label: WatchLang.s("sleep"),
                 color: .indigo
             )
             WatchStatCell(
                 icon: "bolt.fill",
-                value: activeCalories > 0 ? "\(activeCalories)" : "--",
+                value: session.activeCalories > 0 ? "\(session.activeCalories)" : "--",
                 label: WatchLang.s("cal"),
                 color: .orange
             )
         }
-    }
-
-    private func loadData() {
-        let shared = UserDefaults(suiteName: appGroupID)
-        steps = shared?.integer(forKey: "widget_steps") ?? 0
-        bpm = shared?.integer(forKey: "widget_bpm") ?? 0
-        sleepHours = shared?.double(forKey: "widget_sleepHours") ?? 0
-        activeCalories = shared?.integer(forKey: "widget_activeCalories") ?? 0
-        wellnessScore = shared?.double(forKey: "widget_wellnessScore") ?? 0.5
-        moodLabel = shared?.string(forKey: "widget_moodLabel") ?? "---"
-        moodColorR = shared?.double(forKey: "widget_moodColorR") ?? 0.17
-        moodColorG = shared?.double(forKey: "widget_moodColorG") ?? 0.60
-        moodColorB = shared?.double(forKey: "widget_moodColorB") ?? 0.52
-        memojiData = shared?.data(forKey: "widget_memojiData")
     }
 
     private func formatNumber(_ value: Double) -> String {

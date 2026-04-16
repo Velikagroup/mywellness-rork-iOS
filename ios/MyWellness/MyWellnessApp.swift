@@ -21,6 +21,8 @@ struct MyWellnessApp: App {
                 try? await Purchases.shared.logIn(userID)
             }
         }
+
+        WatchConnectivityService.shared.activate()
     }
 
     var body: some Scene {

@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import WidgetKit
+import WatchConnectivity
 
 @Observable
 @MainActor
@@ -578,6 +579,30 @@ class AppViewModel {
             shared.set(pngData, forKey: "widget_memojiData")
         }
         WidgetCenter.shared.reloadAllTimelines()
+        syncWatchData()
+    }
+
+    private func syncWatchData() {
+        let moodUIColor = wellnessMood.uiColor
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        moodUIColor.getRed(&r, green: &g, blue: &b, alpha: nil)
+
+        var watchData: [String: Any] = [
+            "widget_steps": Int(healthSnapshot.steps),
+            "widget_bpm": Int(healthSnapshot.restingHeartRate),
+            "widget_sleepHours": healthSnapshot.sleepHours,
+            "widget_activeCalories": Int(healthSnapshot.activeCalories),
+            "widget_wellnessScore": wellnessScore,
+            "widget_moodLabel": wellnessMood.moodLabel,
+            "widget_moodColorR": Double(r),
+            "widget_moodColorG": Double(g),
+            "widget_moodColorB": Double(b)
+        ]
+        if let memojiImage = memojiUIImage(for: wellnessMood),
+           let pngData = memojiImage.pngData() {
+            watchData["widget_memojiData"] = pngData
+        }
+        WatchConnectivityService.shared.sendWellnessData(watchData)
     }
 
     private func saveAll() {
