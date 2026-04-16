@@ -30,6 +30,27 @@ class WatchSessionService: NSObject {
         WCSession.default.activate()
     }
 
+    func requestLatestData() {
+        guard WCSession.isSupported() else { return }
+        let session = WCSession.default
+        guard session.activationState == .activated else { return }
+
+        if let context = session.receivedApplicationContext as [String: Any]?, !context.isEmpty {
+            applyContext(context)
+        }
+
+        if session.isReachable {
+            session.sendMessage(["request": "sync"], replyHandler: { [weak self] reply in
+                Task { @MainActor in
+                    guard let self else { return }
+                    if !reply.isEmpty {
+                        self.applyContext(reply)
+                    }
+                }
+            }, errorHandler: nil)
+        }
+    }
+
     private func applyContext(_ context: [String: Any]) {
         steps = context["widget_steps"] as? Int ?? 0
         bpm = context["widget_bpm"] as? Int ?? 0
@@ -78,7 +99,11 @@ class WatchSessionService: NSObject {
 }
 
 extension WatchSessionService: WCSessionDelegate {
-    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        Task { @MainActor in
+            self.requestLatestData()
+        }
+    }
 
     nonisolated func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
         Task { @MainActor in

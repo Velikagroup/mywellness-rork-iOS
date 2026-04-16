@@ -6,6 +6,8 @@ import WatchConnectivity
 @Observable
 @MainActor
 class AppViewModel {
+    static weak var sharedInstance: AppViewModel?
+
     var hasCompletedOnboarding: Bool = false
     var userProfile: UserProfile = UserProfile()
     var nutritionPlan: NutritionPlan = NutritionPlan()
@@ -69,6 +71,7 @@ class AppViewModel {
     private let wearableDeviceKey = "wearableDeviceEnabled"
 
     init() {
+        AppViewModel.sharedInstance = nil
         hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
         wearableDeviceEnabled = UserDefaults.standard.bool(forKey: wearableDeviceKey)
         loadAll()
@@ -582,7 +585,7 @@ class AppViewModel {
         syncWatchData()
     }
 
-    private func syncWatchData() {
+    func buildWatchPayload() -> [String: Any] {
         let moodUIColor = wellnessMood.uiColor
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
         moodUIColor.getRed(&r, green: &g, blue: &b, alpha: nil)
@@ -596,12 +599,32 @@ class AppViewModel {
             "widget_moodLabel": wellnessMood.moodLabel,
             "widget_moodColorR": Double(r),
             "widget_moodColorG": Double(g),
-            "widget_moodColorB": Double(b)
+            "widget_moodColorB": Double(b),
+            "widget_timestamp": Date().timeIntervalSince1970
         ]
         if let memojiImage = memojiUIImage(for: wellnessMood),
-           let pngData = memojiImage.pngData() {
-            watchData["widget_memojiData"] = pngData
+           let compressed = compressMemojiForWatch(memojiImage) {
+            watchData["widget_memojiData"] = compressed
         }
+        return watchData
+    }
+
+    private func compressMemojiForWatch(_ image: UIImage) -> Data? {
+        let targetSize: CGFloat = 160
+        let scale = min(targetSize / image.size.width, targetSize / image.size.height, 1)
+        let newSize = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = false
+        let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
+        let resized = renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: newSize))
+        }
+        return resized.jpegData(compressionQuality: 0.7)
+    }
+
+    private func syncWatchData() {
+        let watchData = buildWatchPayload()
         WatchConnectivityService.shared.sendWellnessData(watchData)
     }
 

@@ -26,15 +26,45 @@ class WatchConnectivityService: NSObject {
                 session.sendMessage(data, replyHandler: nil)
             }
         }
+
+        if session.isReachable {
+            session.sendMessage(data, replyHandler: nil, errorHandler: nil)
+        }
+    }
+
+    fileprivate func respondToRequest(_ replyHandler: @escaping ([String: Any]) -> Void) {
+        Task { @MainActor in
+            if let vm = AppViewModel.sharedInstance {
+                replyHandler(vm.buildWatchPayload())
+            } else {
+                replyHandler([:])
+            }
+        }
     }
 }
 
 extension WatchConnectivityService: WCSessionDelegate {
-    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    nonisolated func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        Task { @MainActor in
+            if let vm = AppViewModel.sharedInstance {
+                vm.syncWidgetData()
+            }
+        }
+    }
     nonisolated func sessionDidBecomeInactive(_ session: WCSession) {}
     nonisolated func sessionDidDeactivate(_ session: WCSession) {
         Task { @MainActor in
             session.activate()
         }
     }
+    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any], replyHandler: @escaping ([String: Any]) -> Void) {
+        Task { @MainActor in
+            if let vm = AppViewModel.sharedInstance {
+                replyHandler(vm.buildWatchPayload())
+            } else {
+                replyHandler([:])
+            }
+        }
+    }
+    nonisolated func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {}
 }
