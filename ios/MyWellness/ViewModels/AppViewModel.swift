@@ -71,14 +71,15 @@ class AppViewModel {
     private let wearableDeviceKey = "wearableDeviceEnabled"
 
     init() {
-        AppViewModel.sharedInstance = nil
         hasCompletedOnboarding = UserDefaults.standard.bool(forKey: "hasCompletedOnboarding")
         wearableDeviceEnabled = UserDefaults.standard.bool(forKey: wearableDeviceKey)
         loadAll()
+        AppViewModel.sharedInstance = self
         Task {
             await fetchHealthData()
         }
         scheduleMidnightRollover()
+        syncWidgetData()
     }
 
     func fetchHealthData() async {
