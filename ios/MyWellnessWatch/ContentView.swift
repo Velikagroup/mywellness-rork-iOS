@@ -27,25 +27,23 @@ struct ContentView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
+        GeometryReader { geo in
+            let size = min(geo.size.width, geo.size.height)
+            ZStack {
                 memojiRingSection
-                statsSection
+                constellationStats(containerSize: size)
             }
-            .padding(.horizontal, 4)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .ignoresSafeArea(edges: .bottom)
     }
 
     private var memojiRingSection: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 2) {
             ZStack {
                 Circle()
-                    .fill(moodColor.opacity(0.10))
-                    .frame(width: 90, height: 90)
-
-                Circle()
-                    .stroke(Color.gray.opacity(0.25), lineWidth: 5)
-                    .frame(width: 90, height: 90)
+                    .stroke(Color.gray.opacity(0.22), lineWidth: 5)
+                    .frame(width: 86, height: 86)
 
                 Circle()
                     .trim(from: 0, to: session.wellnessScore)
@@ -53,14 +51,14 @@ struct ContentView: View {
                         moodColor,
                         style: StrokeStyle(lineWidth: 5, lineCap: .round)
                     )
-                    .frame(width: 90, height: 90)
+                    .frame(width: 86, height: 86)
                     .rotationEffect(.degrees(-90))
 
                 if let data = session.memojiData, let uiImage = UIImage(data: data) {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 60, height: 60)
+                        .frame(width: 62, height: 62)
                         .clipShape(.circle)
                 } else {
                     Image(systemName: "face.smiling.inverse")
@@ -70,48 +68,52 @@ struct ContentView: View {
             }
 
             Text(session.moodLabel)
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(size: 11, weight: .bold, design: .rounded))
                 .foregroundStyle(moodColor)
                 .lineLimit(1)
 
             Text("\(Int(session.wellnessScore * 100))%")
-                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .font(.system(size: 10, weight: .semibold, design: .rounded))
                 .foregroundStyle(.secondary)
         }
     }
 
-    private var statsSection: some View {
-        let columns = [
-            GridItem(.flexible(), spacing: 6),
-            GridItem(.flexible(), spacing: 6)
-        ]
-
-        return LazyVGrid(columns: columns, spacing: 6) {
-            WatchStatCell(
-                icon: "figure.walk",
-                value: session.steps > 0 ? formatNumber(Double(session.steps)) : "--",
-                label: WatchLang.s("steps"),
-                color: .blue
-            )
-            WatchStatCell(
-                icon: "heart.fill",
-                value: session.bpm > 25 ? "\(session.bpm)" : "--",
-                label: WatchLang.s("bpm"),
-                color: .red
-            )
-            WatchStatCell(
-                icon: "moon.zzz.fill",
-                value: session.sleepHours > 0 ? String(format: "%.1f", session.sleepHours) : "--",
-                label: WatchLang.s("sleep"),
-                color: .indigo
-            )
-            WatchStatCell(
-                icon: "bolt.fill",
-                value: session.activeCalories > 0 ? "\(session.activeCalories)" : "--",
-                label: WatchLang.s("cal"),
-                color: .orange
-            )
+    private func constellationStats(containerSize: CGFloat) -> some View {
+        VStack {
+            HStack {
+                ConstellationStat(
+                    icon: "figure.walk",
+                    value: session.steps > 0 ? formatNumber(Double(session.steps)) : "--",
+                    label: WatchLang.s("steps"),
+                    color: .blue
+                )
+                Spacer(minLength: 0)
+                ConstellationStat(
+                    icon: "heart.fill",
+                    value: session.bpm > 25 ? "\(session.bpm)" : "--",
+                    label: WatchLang.s("bpm"),
+                    color: .red
+                )
+            }
+            Spacer(minLength: 0)
+            HStack {
+                ConstellationStat(
+                    icon: "moon.zzz.fill",
+                    value: session.sleepHours > 0 ? String(format: "%.1f", session.sleepHours) : "--",
+                    label: WatchLang.s("sleep"),
+                    color: .indigo
+                )
+                Spacer(minLength: 0)
+                ConstellationStat(
+                    icon: "bolt.fill",
+                    value: session.activeCalories > 0 ? "\(session.activeCalories)" : "--",
+                    label: WatchLang.s("cal"),
+                    color: .orange
+                )
+            }
         }
+        .padding(.horizontal, 2)
+        .padding(.vertical, 2)
     }
 
     private func formatNumber(_ value: Double) -> String {
@@ -122,32 +124,29 @@ struct ContentView: View {
     }
 }
 
-private struct WatchStatCell: View {
+private struct ConstellationStat: View {
     let icon: String
     let value: String
     let label: String
     let color: Color
 
     var body: some View {
-        VStack(spacing: 3) {
+        VStack(spacing: 1) {
             HStack(spacing: 3) {
                 Image(systemName: icon)
-                    .font(.system(size: 9, weight: .semibold))
+                    .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(color)
                 Text(value)
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
             Text(label)
-                .font(.system(size: 8, weight: .medium))
+                .font(.system(size: 9, weight: .medium))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 7)
-        .background(color.opacity(0.12))
-        .clipShape(.rect(cornerRadius: 10, style: .continuous))
+        .fixedSize()
     }
 }
