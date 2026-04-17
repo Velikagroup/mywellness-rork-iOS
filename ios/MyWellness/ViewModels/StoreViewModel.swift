@@ -69,6 +69,10 @@ class StoreViewModel {
         await purchase(package: annual)
     }
 
+    func presentCodeRedemption() {
+        Purchases.shared.presentCodeRedemptionSheet()
+    }
+
     func restore() async {
         do {
             let info = try await Purchases.shared.restorePurchases()

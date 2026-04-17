@@ -44,6 +44,7 @@ nonisolated enum Lang {
         "add": ["en": "Add", "es": "Añadir", "it": "Aggiungi", "de": "Hinzufügen", "fr": "Ajouter", "pt": "Adicionar"],
         "edit": ["en": "Edit", "es": "Editar", "it": "Modifica", "de": "Bearbeiten", "fr": "Modifier", "pt": "Editar"],
         "restore": ["en": "Restore", "es": "Restaurar", "it": "Ripristina", "de": "Wiederherstellen", "fr": "Restaurer", "pt": "Restaurar"],
+        "have_promo_code": ["en": "I have a discount code", "es": "Tengo un código de descuento", "it": "Ho un codice sconto", "de": "Ich habe einen Rabattcode", "fr": "J'ai un code de réduction", "pt": "Tenho um código de desconto"],
         "no_active_subscription": ["en": "No active subscription found on this device.", "es": "No se encontró una suscripción activa en este dispositivo.", "it": "Nessun abbonamento attivo trovato su questo dispositivo.", "de": "Kein aktives Abonnement auf diesem Gerät gefunden.", "fr": "Aucun abonnement actif trouvé sur cet appareil.", "pt": "Nenhuma assinatura ativa encontrada neste dispositivo."],
         "details": ["en": "Details", "es": "Detalles", "it": "Dettagli", "de": "Details", "fr": "Détails", "pt": "Detalhes"],
         "restart": ["en": "Restart", "es": "Reiniciar", "it": "Ricomincia", "de": "Neustart", "fr": "Redémarrer", "pt": "Reiniciar"],

@@ -2078,6 +2078,24 @@ struct OnboardingView: View {
                     .padding(.top, 2)
                     .padding(.bottom, 12)
 
+                Button {
+                    storeVM.presentCodeRedemption()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "tag.fill")
+                            .font(.system(size: 12, weight: .semibold))
+                        Text(Lang.s("have_promo_code"))
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .foregroundStyle(Color.black)
+                    .frame(height: 40)
+                    .padding(.horizontal, 16)
+                    .background(
+                        Capsule().stroke(Color(red: 0.85, green: 0.85, blue: 0.88), lineWidth: 1)
+                    )
+                }
+                .padding(.bottom, 8)
+
                 HStack(spacing: 16) {
                     Link(Lang.s("terms"), destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                     Text("·").foregroundStyle(Color(red: 0.7, green: 0.7, blue: 0.75))
