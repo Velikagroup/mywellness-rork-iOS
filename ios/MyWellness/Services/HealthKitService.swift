@@ -58,8 +58,6 @@ class HealthKitService {
     func fetchAllHealthData() async -> HealthSnapshot {
         guard isAvailable else { return HealthSnapshot() }
 
-        await requestAuthorization()
-
         let store = healthStore
 
         async let activeCalories = fetchTodaySum(.activeEnergyBurned, unit: .kilocalorie(), store: store)
