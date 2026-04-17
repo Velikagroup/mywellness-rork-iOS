@@ -2604,21 +2604,23 @@ struct OnboardingView: View {
     }
 
     // MARK: - Step 2: Referral Source
-    private let referralSourceItems: [(name: String, sf: String, r: Double, g: Double, b: Double)] = [
-        ("App Store",            "apps.iphone",          0.00, 0.46, 1.00),
-        ("Instagram",            "camera.fill",          0.76, 0.21, 0.52),
-        ("YouTube",              "play.rectangle.fill",  0.90, 0.12, 0.12),
-        ("TikTok",               "music.note",           0.01, 0.01, 0.01),
-        ("Google",               "magnifyingglass",      0.26, 0.52, 0.96),
-        ("TV",                   "tv.fill",              0.39, 0.39, 0.40),
-        ("X (Twitter)",          "xmark.square.fill",    0.01, 0.01, 0.01),
-        ("Facebook",             "hand.thumbsup.fill",   0.09, 0.46, 0.95),
-        ("Amico o familiare",    "person.2.fill",        0.19, 0.69, 0.79),
-        ("Podcast",              "mic.fill",             0.61, 0.35, 0.71),
-        ("Reddit",               "bubble.left.fill",     1.00, 0.27, 0.00),
-        ("Influencer / Creator", "star.fill",            0.96, 0.65, 0.14),
-        ("Altro",                "ellipsis.circle.fill", 0.56, 0.56, 0.58),
-    ]
+    private var referralSourceItems: [(key: String, name: String, sf: String, r: Double, g: Double, b: Double)] {
+        [
+            ("App Store",            "App Store",            "apps.iphone",          0.00, 0.46, 1.00),
+            ("Instagram",            "Instagram",            "camera.fill",          0.76, 0.21, 0.52),
+            ("YouTube",              "YouTube",              "play.rectangle.fill",  0.90, 0.12, 0.12),
+            ("TikTok",               "TikTok",               "music.note",           0.01, 0.01, 0.01),
+            ("Google",               "Google",               "magnifyingglass",      0.26, 0.52, 0.96),
+            ("TV",                   "TV",                   "tv.fill",              0.39, 0.39, 0.40),
+            ("X (Twitter)",          "X (Twitter)",          "xmark.square.fill",    0.01, 0.01, 0.01),
+            ("Facebook",             "Facebook",             "hand.thumbsup.fill",   0.09, 0.46, 0.95),
+            ("friend_family",        Lang.s("friend_family"),    "person.2.fill",        0.19, 0.69, 0.79),
+            ("Podcast",              "Podcast",              "mic.fill",             0.61, 0.35, 0.71),
+            ("Reddit",               "Reddit",               "bubble.left.fill",     1.00, 0.27, 0.00),
+            ("influencer_creator",   Lang.s("influencer_creator"), "star.fill",            0.96, 0.65, 0.14),
+            ("other",                Lang.s("other"),            "ellipsis.circle.fill", 0.56, 0.56, 0.58),
+        ]
+    }
 
     private var referralSourceStep: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -2627,11 +2629,11 @@ struct OnboardingView: View {
                 .padding(.top, 24)
 
             VStack(spacing: 10) {
-                ForEach(referralSourceItems, id: \.name) { item in
-                    let isSelected = referralSource == item.name
+                ForEach(referralSourceItems, id: \.key) { item in
+                    let isSelected = referralSource == item.key
                     let accent = Color(red: item.r, green: item.g, blue: item.b)
                     Button {
-                        referralSource = item.name
+                        referralSource = item.key
                     } label: {
                         HStack(spacing: 14) {
                             ZStack {
