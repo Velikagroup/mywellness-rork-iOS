@@ -36,35 +36,36 @@ struct ContentView: View {
     }
 
     private var memojiRingSection: some View {
-        ZStack {
-            Circle()
-                .stroke(Color.gray.opacity(0.22), lineWidth: 6)
-                .frame(width: 94, height: 94)
+        VStack(spacing: 4) {
+            ZStack {
+                Circle()
+                    .stroke(Color.gray.opacity(0.22), lineWidth: 6)
+                    .frame(width: 94, height: 94)
 
-            Circle()
-                .trim(from: 0, to: session.wellnessScore)
-                .stroke(
-                    moodColor,
-                    style: StrokeStyle(lineWidth: 6, lineCap: .round)
-                )
-                .frame(width: 94, height: 94)
-                .rotationEffect(.degrees(-90))
+                Circle()
+                    .trim(from: 0, to: session.wellnessScore)
+                    .stroke(
+                        moodColor,
+                        style: StrokeStyle(lineWidth: 6, lineCap: .round)
+                    )
+                    .frame(width: 94, height: 94)
+                    .rotationEffect(.degrees(-90))
 
-            if let data = session.memojiData, let uiImage = UIImage(data: data) {
-                Image(uiImage: removeWhiteBackground(from: uiImage) ?? uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 76, height: 76)
-            } else {
-                VStack(spacing: 2) {
+                if let data = session.memojiData, let uiImage = UIImage(data: data) {
+                    Image(uiImage: removeWhiteBackground(from: uiImage) ?? uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 76, height: 76)
+                } else {
                     Image(systemName: "face.smiling")
                         .font(.system(size: 30, weight: .medium))
                         .foregroundStyle(moodColor)
-                    Text("\(Int(session.wellnessScore * 100))%")
-                        .font(.system(size: 13, weight: .bold, design: .rounded))
-                        .foregroundStyle(moodColor)
                 }
             }
+
+            Text("\(Int(session.wellnessScore * 100))%")
+                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .foregroundStyle(moodColor)
         }
     }
 
