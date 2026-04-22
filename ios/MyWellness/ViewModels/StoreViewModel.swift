@@ -81,4 +81,32 @@ class StoreViewModel {
             self.error = error.localizedDescription
         }
     }
+
+    // MARK: - Localized Prices (from App Store / RevenueCat)
+
+    var monthlyPackage: Package? { offerings?.current?.monthly }
+    var yearlyPackage: Package? { offerings?.current?.annual }
+
+    /// Full localized price for the monthly plan (e.g. "€9.99", "$9.99").
+    var monthlyPriceString: String? {
+        monthlyPackage?.storeProduct.localizedPriceString
+    }
+
+    /// Full localized price for the yearly plan (e.g. "€49.99").
+    var yearlyPriceString: String? {
+        yearlyPackage?.storeProduct.localizedPriceString
+    }
+
+    /// Yearly price divided by 12, localized to the product's currency.
+    var yearlyPricePerMonthString: String? {
+        guard let product = yearlyPackage?.storeProduct,
+              let formatter = product.priceFormatter else { return nil }
+        let perMonth = NSDecimalNumber(decimal: product.price / 12)
+        return formatter.string(from: perMonth)
+    }
+
+    /// Monthly price localized (same as monthlyPriceString but kept for symmetry).
+    var monthlyPricePerMonthString: String? {
+        monthlyPriceString
+    }
 }

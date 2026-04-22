@@ -2079,7 +2079,7 @@ struct OnboardingView: View {
                 }
                 .padding(.top, 4)
 
-                Text(Lang.s("price_yearly_full"))
+                Text(dynamicPriceYearlyFull)
                     .font(.system(size: 12))
                     .foregroundStyle(Color(red: 0.55, green: 0.55, blue: 0.6))
                     .padding(.top, 2)
@@ -2245,8 +2245,8 @@ struct OnboardingView: View {
 
             VStack(spacing: 0) {
                 HStack(spacing: 12) {
-                    paywallPlanCard(plan: "monthly", title: Lang.s("monthly"), price: "9,99 €", unit: "/mo", badge: nil)
-                    paywallPlanCard(plan: "yearly", title: Lang.s("yearly"), price: "4,16 €", unit: "/mo", badge: Lang.s("three_days_free"))
+                    paywallPlanCard(plan: "monthly", title: Lang.s("monthly"), price: storeVM.monthlyPriceString ?? "9,99 €", unit: "/mo", badge: nil)
+                    paywallPlanCard(plan: "yearly", title: Lang.s("yearly"), price: storeVM.yearlyPricePerMonthString ?? "4,16 €", unit: "/mo", badge: Lang.s("three_days_free"))
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -2299,7 +2299,7 @@ struct OnboardingView: View {
                 .disabled(storeVM.isPurchasing)
                 .padding(.horizontal, 20)
 
-                Text(selectedPlan == "yearly" ? Lang.s("trial_price_yearly") : Lang.s("price_monthly"))
+                Text(selectedPlan == "yearly" ? dynamicTrialPriceYearly : dynamicPriceMonthly)
                     .font(.system(size: 12))
                     .foregroundStyle(Color(red: 0.55, green: 0.55, blue: 0.6))
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -2394,7 +2394,7 @@ struct OnboardingView: View {
                 }
                 .disabled(storeVM.isPurchasing)
 
-                Text(Lang.s("trial_price_yearly"))
+                Text(dynamicTrialPriceYearly)
                     .font(.system(size: 12))
                     .foregroundStyle(Color(red: 0.55, green: 0.55, blue: 0.6))
                     .multilineTextAlignment(.center)
@@ -2439,7 +2439,7 @@ struct OnboardingView: View {
                     .foregroundStyle(Color.black)
                     .multilineTextAlignment(.center)
 
-                Text("€9,99 / month")
+                Text((storeVM.monthlyPriceString ?? "€9,99") + " / month")
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(Color.black)
 
@@ -2475,7 +2475,7 @@ struct OnboardingView: View {
                 .disabled(storeVM.isPurchasing)
                 .padding(.horizontal, 20)
 
-                Text(Lang.s("monthly_cancel"))
+                Text(dynamicMonthlyCancel)
                     .font(.system(size: 12))
                     .foregroundStyle(Color(red: 0.55, green: 0.55, blue: 0.6))
                     .multilineTextAlignment(.center)
@@ -2483,6 +2483,44 @@ struct OnboardingView: View {
             .padding(.bottom, 48)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: - Dynamic price strings from App Store / RevenueCat
+
+    private var dynamicTrialPriceYearly: String {
+        guard let yearly = storeVM.yearlyPriceString,
+              let perMonth = storeVM.yearlyPricePerMonthString else {
+            return Lang.s("trial_price_yearly")
+        }
+        let template = Lang.s("trial_price_yearly_template")
+        return template
+            .replacingOccurrences(of: "{yearly}", with: yearly)
+            .replacingOccurrences(of: "{perMonth}", with: perMonth)
+    }
+
+    private var dynamicPriceMonthly: String {
+        guard let monthly = storeVM.monthlyPriceString else {
+            return Lang.s("price_monthly")
+        }
+        return Lang.s("price_monthly_template").replacingOccurrences(of: "{monthly}", with: monthly)
+    }
+
+    private var dynamicMonthlyCancel: String {
+        guard let monthly = storeVM.monthlyPriceString else {
+            return Lang.s("monthly_cancel")
+        }
+        return Lang.s("monthly_cancel_template").replacingOccurrences(of: "{monthly}", with: monthly)
+    }
+
+    private var dynamicPriceYearlyFull: String {
+        guard let yearly = storeVM.yearlyPriceString,
+              let perMonth = storeVM.yearlyPricePerMonthString else {
+            return Lang.s("price_yearly_full")
+        }
+        let template = Lang.s("price_yearly_full_template")
+        return template
+            .replacingOccurrences(of: "{yearly}", with: yearly)
+            .replacingOccurrences(of: "{perMonth}", with: perMonth)
     }
 
     private var billingDate: String {
