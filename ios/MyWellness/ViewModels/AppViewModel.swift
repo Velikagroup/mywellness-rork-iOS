@@ -129,6 +129,7 @@ class AppViewModel {
         weightHistory = DefaultData.defaultWeightHistory(for: profile)
         weightHistory.append(WeightEntry(date: Date(), weightKg: profile.currentWeightKg))
         saveAll()
+        generationTask?.cancel()
         generationTask = Task {
             await regeneratePlans()
         }
@@ -139,6 +140,7 @@ class AppViewModel {
         weightHistory = DefaultData.defaultWeightHistory(for: profile)
         weightHistory.append(WeightEntry(date: Date(), weightKg: profile.currentWeightKg))
         saveAll()
+        generationTask?.cancel()
         generationTask = Task {
             await regeneratePlans()
         }
@@ -148,10 +150,23 @@ class AppViewModel {
         isGeneratingPlan = true
         generationError = nil
 
-        let generated = WorkoutPlanGenerator.generateSafe(profile: userProfile, preferences: workoutQuizPreferences)
-        let localized = WorkoutLocalization.localizePlanSafe(generated)
-        workoutPlan = localized.days.isEmpty ? WorkoutLocalization.localizePlanSafe(DefaultData.workoutPlan(for: userProfile)) : localized
+        let profile = userProfile
+        let preferences = workoutQuizPreferences
+        let localized: WorkoutPlan = await Task.detached(priority: .userInitiated) {
+            let generated = WorkoutPlanGenerator.generateSafe(profile: profile, preferences: preferences)
+            let loc = WorkoutLocalization.localizePlanSafe(generated)
+            if loc.days.isEmpty {
+                return WorkoutLocalization.localizePlanSafe(DefaultData.workoutPlan(for: profile))
+            }
+            return loc
+        }.value
 
+        if Task.isCancelled {
+            isGeneratingPlan = false
+            return
+        }
+
+        workoutPlan = localized
         isGeneratingPlan = false
         saveAll()
     }
@@ -227,9 +242,16 @@ class AppViewModel {
         workoutQuizPreferences = preferences
         isGeneratingPlan = true
         generationError = nil
-        let generated = WorkoutPlanGenerator.generateSafe(profile: userProfile, preferences: preferences)
-        let localized = WorkoutLocalization.localizePlanSafe(generated)
-        workoutPlan = localized.days.isEmpty ? WorkoutLocalization.localizePlanSafe(DefaultData.workoutPlan(for: userProfile)) : localized
+        let profile = userProfile
+        let localized: WorkoutPlan = await Task.detached(priority: .userInitiated) {
+            let generated = WorkoutPlanGenerator.generateSafe(profile: profile, preferences: preferences)
+            let loc = WorkoutLocalization.localizePlanSafe(generated)
+            if loc.days.isEmpty {
+                return WorkoutLocalization.localizePlanSafe(DefaultData.workoutPlan(for: profile))
+            }
+            return loc
+        }.value
+        workoutPlan = localized
         isGeneratingPlan = false
         saveAll()
     }
