@@ -245,6 +245,9 @@ struct OnboardingView: View {
                         if prevStep == 6 && targetWeightKg >= weightKg {
                             prevStep = 5
                         }
+                        if prevStep == 17 {
+                            prevStep = 16
+                        }
                         withAnimation(.easeInOut(duration: 0.25)) { step = prevStep }
                     }
                 } label: {
@@ -306,7 +309,7 @@ struct OnboardingView: View {
         Button {
             handleContinue()
         } label: {
-            Text(step == 17 && referralCode.isEmpty ? Lang.s("skip") : step == 20 ? Lang.s("discover_now") : Lang.s("continue"))
+            Text(step == 20 ? Lang.s("discover_now") : Lang.s("continue"))
                 .font(.system(size: 17, weight: .semibold))
                 .frame(maxWidth: .infinity)
                 .frame(height: 56)
@@ -327,6 +330,9 @@ struct OnboardingView: View {
         var nextStep = step + 1
         if nextStep == 6 && targetWeightKg >= weightKg {
             nextStep = 7
+        }
+        if nextStep == 17 {
+            nextStep = 18
         }
         withAnimation(.easeInOut(duration: 0.25)) { step = nextStep }
     }
