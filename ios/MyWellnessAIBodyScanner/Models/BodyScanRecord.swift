@@ -53,7 +53,16 @@ nonisolated struct BodyScanRecord: Codable, Sendable, Identifiable {
     }
 
     var biologicalAgeNumeric: Double? {
-        let cleaned = biologicalAge.replacingOccurrences(of: " anni", with: "").replacingOccurrences(of: " yrs", with: "")
+        let cleaned = biologicalAge
+            .replacingOccurrences(of: " anni", with: "")
+            .replacingOccurrences(of: " años", with: "")
+            .replacingOccurrences(of: " years old", with: "")
+            .replacingOccurrences(of: " years", with: "")
+            .replacingOccurrences(of: " yrs", with: "")
+            .replacingOccurrences(of: " Jahre alt", with: "")
+            .replacingOccurrences(of: " Jahre", with: "")
+            .replacingOccurrences(of: " ans", with: "")
+            .replacingOccurrences(of: " anos", with: "")
             .trimmingCharacters(in: .whitespaces)
         return Double(cleaned)
     }

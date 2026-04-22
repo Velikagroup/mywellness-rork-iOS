@@ -233,7 +233,7 @@ struct BodyScan2ResultView: View {
         }
 
         HStack(spacing: 10) {
-            overviewCard(icon: "building.columns", label: Lang.s("biological_age_label"), value: "\(result.biologicalAge) anni", color: accentGreen)
+            overviewCard(icon: "building.columns", label: Lang.s("biological_age_label"), value: "\(result.biologicalAge) \(Lang.s("sq_years"))", color: accentGreen)
             overviewCard(icon: "square.stack.3d.up", label: Lang.s("definition_label"), value: result.muscleDefinition, color: Color(red: 0.3, green: 0.4, blue: 0.8))
         }
 
