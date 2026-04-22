@@ -950,7 +950,7 @@ struct OnboardingView: View {
     private var doubleWeightStep: some View {
         VStack(spacing: 0) {
             quizHeader(
-                title: Lang.s("double_weight_title"),
+                title: Lang.s(weightDiff < 0 ? "double_weight_title_gain" : "double_weight_title"),
                 subtitle: nil
             )
             .padding(.top, 24)
