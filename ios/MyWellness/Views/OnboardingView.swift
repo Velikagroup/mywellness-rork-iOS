@@ -554,11 +554,11 @@ struct OnboardingView: View {
                                 .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 0.55))
                                 .kerning(1)
                             Picker("Weight", selection: Binding(
-                                get: { Int(weightKg) },
-                                set: { weightKg = Double($0) }
+                                get: { Int((weightKg * 10).rounded()) },
+                                set: { weightKg = Double($0) / 10.0 }
                             )) {
-                                ForEach(30...200, id: \.self) { v in
-                                    Text("\(v) kg")
+                                ForEach(Array(stride(from: 300, through: 2000, by: 1)), id: \.self) { v in
+                                    Text(String(format: "%.1f kg", Double(v) / 10.0))
                                         .foregroundStyle(Color.black)
                                         .tag(v)
                                 }
@@ -618,11 +618,11 @@ struct OnboardingView: View {
                                 .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 0.55))
                                 .kerning(1)
                             Picker("Weight lbs", selection: Binding(
-                                get: { Int(weightKg * 2.20462) },
-                                set: { lbs in weightKg = Double(lbs) / 2.20462 }
+                                get: { Int((weightKg * 2.20462 * 10).rounded()) },
+                                set: { tenths in weightKg = (Double(tenths) / 10.0) / 2.20462 }
                             )) {
-                                ForEach(66...440, id: \.self) { v in
-                                    Text("\(v) lbs")
+                                ForEach(Array(stride(from: 660, through: 4400, by: 1)), id: \.self) { v in
+                                    Text(String(format: "%.1f lbs", Double(v) / 10.0))
                                         .foregroundStyle(Color.black)
                                         .tag(v)
                                 }
