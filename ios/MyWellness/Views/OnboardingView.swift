@@ -710,7 +710,7 @@ struct OnboardingView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
 
-                    Text(Lang.s("users_say_change"))
+                    Text(Lang.s(weightDiff > 0 ? "users_say_change" : "users_say_change_gain"))
                         .font(.system(size: 15))
                         .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 0.55))
                         .multilineTextAlignment(.center)
