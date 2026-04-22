@@ -1,4 +1,0 @@
-NSCameraUsageDescription = "MyWellness uses the camera to analyze food calories, scan nutrition labels, and take photos for body scan.";
-NSHealthShareUsageDescription = "MyWellness reads health data including steps, sleep, heart rate, HRV, and oxygen saturation to calculate your personal wellness score.";
-NSHealthUpdateUsageDescription = "MyWellness writes workout and activity data to help you track your wellness progress.";
-NSPhotoLibraryUsageDescription = "MyWellness accesses your photo library to analyze food and nutrition labels.";

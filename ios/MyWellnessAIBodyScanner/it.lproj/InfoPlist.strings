@@ -1,0 +1,4 @@
+NSCameraUsageDescription = "MyWellnessAIBodyScanner utilizza la fotocamera per analizzare le calorie degli alimenti, scansionare le etichette nutrizionali e scattare foto per il body scan.";
+NSHealthShareUsageDescription = "MyWellnessAIBodyScanner legge i dati sulla salute tra cui passi, sonno, frequenza cardiaca, HRV e saturazione di ossigeno per calcolare il tuo punteggio di benessere personale.";
+NSHealthUpdateUsageDescription = "MyWellnessAIBodyScanner scrive dati di allenamento e attività per aiutarti a monitorare i tuoi progressi di benessere.";
+NSPhotoLibraryUsageDescription = "MyWellnessAIBodyScanner accede alla tua libreria foto per analizzare gli alimenti e le etichette nutrizionali.";
