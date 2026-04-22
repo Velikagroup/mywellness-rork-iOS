@@ -1413,7 +1413,7 @@ struct OnboardingView: View {
                     .frame(height: 240)
                     .padding(.horizontal, 20)
 
-                Text(Lang.s("weight_chart_desc"))
+                Text(Lang.s(weightDiff < 0 ? "weight_chart_desc_gain" : "weight_chart_desc"))
                     .font(.system(size: 14))
                     .foregroundStyle(Color(red: 0.5, green: 0.5, blue: 0.55))
                     .multilineTextAlignment(.center)
