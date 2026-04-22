@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>MyWellness writes workout and activity data to help you track your wellness progress.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>MyWellness reads health data including steps, sleep, heart rate, HRV, and oxygen saturation to calculate your personal wellness score.</string>
 	<key>GIDClientID</key>
 	<string>$(GOOGLE_IOS_CLIENT_ID)</string>
 	<key>CFBundleURLTypes</key>
