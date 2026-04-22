@@ -1610,14 +1610,15 @@ struct OnboardingView: View {
             .padding(.bottom, 28)
 
             VStack(alignment: .center, spacing: 6) {
-                Text(Lang.s("you_should_lose"))
+                let isGaining = targetWeightKg > weightKg
+                Text(Lang.s(isGaining ? "you_should_gain" : "you_should_lose"))
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(Color.black)
 
-                let diff = max(0.0, weightKg - targetWeightKg)
+                let diff = abs(weightKg - targetWeightKg)
                 let unit = isMetric ? "kg" : "lbs"
                 let displayDiff = isMetric ? diff : diff * 2.20462
-                Text("\(Lang.s("lose_by")) \(String(format: "%.0f", displayDiff)) \(unit) \(Lang.s("by_date")) \(goalDate)")
+                Text("\(Lang.s(isGaining ? "gain_by" : "lose_by")) \(String(format: "%.1f", displayDiff)) \(unit) \(Lang.s("by_date")) \(goalDate)")
                     .font(.system(size: 15))
                     .foregroundStyle(Color(red: 0.45, green: 0.45, blue: 0.50))
             }
