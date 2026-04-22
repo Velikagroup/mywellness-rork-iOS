@@ -606,11 +606,6 @@ struct SignInOverlayView: View {
     let onDismiss: () -> Void
     let onSuccess: () -> Void
 
-    @State private var showEmailForm: Bool = false
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State private var isLoading: Bool = false
-
     var body: some View {
         VStack(spacing: 0) {
             Capsule()
@@ -640,11 +635,7 @@ struct SignInOverlayView: View {
 
             Divider().opacity(0.2)
 
-            if showEmailForm {
-                emailFormContent
-            } else {
-                mainButtonsContent
-            }
+            mainButtonsContent
 
             VStack(spacing: 2) {
                 Text(continuingText)
@@ -744,96 +735,10 @@ struct SignInOverlayView: View {
             }
             .buttonStyle(.plain)
             .disabled(AuthService.shared.isGoogleSigningIn)
-
-            Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                    showEmailForm = true
-                }
-            } label: {
-                HStack(spacing: 12) {
-                    Image(systemName: "envelope")
-                        .font(.system(size: 18))
-                        .foregroundStyle(.primary)
-                    Text(emailText)
-                        .font(.system(size: 16, weight: .medium))
-                        .foregroundStyle(.primary)
-                }
-                .frame(height: 54)
-                .frame(maxWidth: .infinity)
-                .background(Color(.systemGray6))
-                .clipShape(.rect(cornerRadius: 27))
-            }
-            .buttonStyle(.plain)
         }
         .padding(.horizontal, 20)
         .padding(.top, 18)
-    }
-
-    private var emailFormContent: some View {
-        VStack(spacing: 14) {
-            Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
-                    showEmailForm = false
-                }
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 13, weight: .semibold))
-                    Text(backText)
-                        .font(.system(size: 14, weight: .medium))
-                }
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-
-            VStack(spacing: 10) {
-                TextField(emailPlaceholder, text: $email)
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
-                    .autocorrectionDisabled()
-                    .padding(.horizontal, 16)
-                    .frame(height: 52)
-                    .background(Color(.systemGray6))
-                    .clipShape(.rect(cornerRadius: 14, style: .continuous))
-
-                SecureField(passwordPlaceholder, text: $password)
-                    .padding(.horizontal, 16)
-                    .frame(height: 52)
-                    .background(Color(.systemGray6))
-                    .clipShape(.rect(cornerRadius: 14, style: .continuous))
-            }
-
-            Button {
-                guard !email.isEmpty, !password.isEmpty else { return }
-                isLoading = true
-                Task {
-                    await AuthService.shared.handleEmailSignIn(email: email, password: password)
-                    isLoading = false
-                    if AuthService.shared.isSignedIn {
-                        onSuccess()
-                    }
-                }
-            } label: {
-                Group {
-                    if isLoading {
-                        ProgressView().tint(.white)
-                    } else {
-                        Text(signInTitle)
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundStyle(.white)
-                    }
-                }
-                .frame(height: 54)
-                .frame(maxWidth: .infinity)
-                .background(email.isEmpty || password.isEmpty ? Color(.systemGray3) : .black)
-                .clipShape(.rect(cornerRadius: 27))
-            }
-            .buttonStyle(.plain)
-            .disabled(email.isEmpty || password.isEmpty || isLoading)
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 16)
+        .padding(.bottom, 4)
     }
 
     private var googleGLogo: some View {
