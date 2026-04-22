@@ -598,7 +598,7 @@ struct MealPlanQuizView: View {
     private func regularMealCountCard(count: Int, dailyTarget: Double) -> some View {
         let isSelected = quizVM.preferences.mealsCount == count
         let kcalPerMeal = Int(dailyTarget / Double(count))
-        let mealLabel: String = {
+        let _: String = {
             switch count {
             case 1: return "1 comida"
             case 2: return "2 comidas"

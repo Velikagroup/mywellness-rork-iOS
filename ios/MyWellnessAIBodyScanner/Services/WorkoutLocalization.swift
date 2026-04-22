@@ -1,6 +1,6 @@
 import Foundation
 
-enum WorkoutLocalization {
+nonisolated enum WorkoutLocalization {
     static func localizePlanSafe(_ plan: WorkoutPlan) -> WorkoutPlan {
         let lang = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         guard lang != "en" else { return plan }

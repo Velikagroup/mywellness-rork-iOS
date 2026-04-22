@@ -1,11 +1,11 @@
 import SwiftUI
 import AVFoundation
 
-nonisolated final class BodyScanCameraSession: NSObject, @unchecked Sendable {
+final class BodyScanCameraSession: NSObject, @unchecked Sendable {
     let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
     private var currentPosition: AVCaptureDevice.Position = .back
-    private var photoCompletion: ((UIImage?) -> Void)?
+    nonisolated(unsafe) private var photoCompletion: ((UIImage?) -> Void)?
 
     private let sessionQueue = DispatchQueue(label: "com.bodyscan.session", qos: .userInitiated)
 
@@ -73,7 +73,7 @@ nonisolated final class BodyScanCameraSession: NSObject, @unchecked Sendable {
 }
 
 extension BodyScanCameraSession: AVCapturePhotoCaptureDelegate {
-    func photoOutput(
+    nonisolated func photoOutput(
         _ output: AVCapturePhotoOutput,
         didFinishProcessingPhoto photo: AVCapturePhoto,
         error: Error?

@@ -1,6 +1,6 @@
 import Foundation
 
-enum WorkoutTranslationsIT {
+nonisolated enum WorkoutTranslationsIT {
     static let data = WorkoutTranslationData(
         exerciseNames: exerciseNames,
         focusNames: focusNames,
@@ -284,7 +284,6 @@ enum WorkoutTranslationsIT {
         "Bench Press": "Movimento composto principale per lo sviluppo del petto.",
         "Incline Dumbbell Press": "Lavora il petto alto con un'angolazione inclinata.",
         "Cable Flyes": "Esercizio di isolamento per il petto con tensione costante.",
-        "Tricep Pushdown": "Esercizio ai cavi per isolare i tricipiti.",
         "Skull Crushers": "Estensione dei tricipiti da sdraiato per la massa.",
         "Barbell Rows": "Rematore composto pesante per lo spessore della schiena.",
         "Cable Rows": "Rematore ai cavi seduto per lo sviluppo della schiena media.",

@@ -23,8 +23,8 @@ struct WireframeBodyOverlay: View {
         let cx = w / 2
         let color = Color.white
 
-        let horizontalRows = 28
-        let verticalCols = 12
+        _ = 28
+        _ = 12
 
         let headR = w * 0.1
         let headCY = h * 0.065 + headR

@@ -134,7 +134,7 @@ class AuthService: NSObject {
             isSignedIn = true
             UserDefaults.standard.set(true, forKey: signedInKey)
 
-            try? await Purchases.shared.logIn(userID)
+            _ = try? await Purchases.shared.logIn(userID)
 
             triggerWelcomeAutomations()
         } catch {
@@ -184,7 +184,7 @@ class AuthService: NSObject {
         isSignedIn = true
         UserDefaults.standard.set(true, forKey: signedInKey)
 
-        try? await Purchases.shared.logIn(userID)
+        _ = try? await Purchases.shared.logIn(userID)
 
         triggerWelcomeAutomations()
     }

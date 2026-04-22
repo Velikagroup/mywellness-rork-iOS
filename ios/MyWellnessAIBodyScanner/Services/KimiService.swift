@@ -1,7 +1,7 @@
 import Foundation
 
 nonisolated struct KimiService: Sendable {
-    private static let apiKey = Config.EXPO_PUBLIC_KIMI_API_KEY
+    private static var apiKey: String { env_kimiApiKey }
     private static let baseURL = "https://api.moonshot.ai/v1/chat/completions"
     private static let model = "moonshot-v1-8k"
     private static let largeModel = "moonshot-v1-32k"

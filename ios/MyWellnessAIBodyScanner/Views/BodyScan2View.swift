@@ -645,7 +645,7 @@ struct BodyScan2View: View {
 
                 guard !Task.isCancelled else { return }
 
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                _ = withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                     completedSegments.insert(segIndex)
                 }
 
@@ -660,7 +660,7 @@ struct BodyScan2View: View {
             await capturePhoto(for: current)
 
             HapticHelper.notification(.success)
-            withAnimation(.spring(response: 0.4)) {
+            _ = withAnimation(.spring(response: 0.4)) {
                 completedPhases.insert(current)
             }
 
@@ -717,23 +717,23 @@ struct BodyScan2View: View {
                 capturedPhotos[.leftSide].flatMap { AIService.compressImageForAI($0, maxDimension: 768, quality: 0.5) }
             }
 
-            var finalResult: BodyScan2Result
+            let finalResult: BodyScan2Result
             do {
-                let result = try await AIService.analyzeFullBodyScan(
+                finalResult = try await AIService.analyzeFullBodyScan(
                     frontBase64: frontB64,
                     rightBase64: rightB64,
                     backBase64: backB64,
                     leftBase64: leftB64,
                     profile: profile
                 )
-                finalResult = result
             } catch {
                 finalResult = BodyScan2Result.fallback()
             }
 
+            let resultToUse = finalResult
             await MainActor.run {
-                scanResult = finalResult
-                appVM.addBodyScanRecord(finalResult)
+                scanResult = resultToUse
+                appVM.addBodyScanRecord(resultToUse)
                 appVM.generatePlanFromBodyScanSafe()
                 isAnalyzing = false
                 showResult = true

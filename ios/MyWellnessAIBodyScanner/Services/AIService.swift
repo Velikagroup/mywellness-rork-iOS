@@ -127,7 +127,7 @@ nonisolated struct NutritionTableResult: Codable, Sendable {
 }
 
 nonisolated struct AIService: Sendable {
-    private static let toolkitURL = Config.EXPO_PUBLIC_TOOLKIT_URL
+    private static var toolkitURL: String { env_toolkitURL }
 
     private static var useKimi: Bool {
         KimiService.isConfigured
@@ -824,7 +824,7 @@ nonisolated struct AIService: Sendable {
             trainingDays = Array(trainingDays.prefix(expected))
         }
 
-        let trainingDayNames = Set(trainingDays.map { $0.dayName })
+        _ = Set(trainingDays.map { $0.dayName })
         var allDays: [WorkoutDay] = []
         for dayName in weekdays {
             if let training = trainingDays.first(where: { $0.dayName == dayName }) {
@@ -1691,7 +1691,7 @@ extension AIService {
         throw lastError ?? AIServiceError.networkError("Failed to analyze the workout plan.")
     }
 
-    static func parsePantryProductResult(from obj: [String: Any]) -> PantryProductResult {
+    nonisolated static func parsePantryProductResult(from obj: [String: Any]) -> PantryProductResult {
         let productName = obj["productName"] as? String ?? "Scanned Product"
         let brand = obj["brand"] as? String ?? ""
         let category = obj["category"] as? String ?? "Condiments and Spices"
@@ -1875,7 +1875,7 @@ extension AIService {
         return (fallbackMods, currentPlan)
     }
 
-    static func summarizeNutritionPlan(_ plan: NutritionPlan) -> String {
+    nonisolated static func summarizeNutritionPlan(_ plan: NutritionPlan) -> String {
         var summary = ""
         for day in plan.days {
             let mealNames = day.meals.map { "\($0.type.rawValue): \($0.name) (\($0.calories)kcal)" }.joined(separator: ", ")
@@ -1884,7 +1884,7 @@ extension AIService {
         return summary
     }
 
-    static func summarizeWorkoutPlan(_ plan: WorkoutPlan) -> String {
+    nonisolated static func summarizeWorkoutPlan(_ plan: WorkoutPlan) -> String {
         var summary = ""
         for day in plan.days {
             if day.isRestDay {
@@ -1897,7 +1897,7 @@ extension AIService {
         return summary
     }
 
-    static func parseModifiedNutritionResponse(_ jsonText: String) -> (modifications: ScanPlanModifications, modifiedPlan: NutritionPlan)? {
+    nonisolated static func parseModifiedNutritionResponse(_ jsonText: String) -> (modifications: ScanPlanModifications, modifiedPlan: NutritionPlan)? {
         guard let jsonData = jsonText.data(using: .utf8),
               let obj = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] else { return nil }
 
@@ -2449,7 +2449,7 @@ extension AIService {
         }
     }
 
-    static func parseModifiedWorkoutResponse(_ jsonText: String) -> (modifications: ScanPlanModifications, modifiedPlan: WorkoutPlan)? {
+    nonisolated static func parseModifiedWorkoutResponse(_ jsonText: String) -> (modifications: ScanPlanModifications, modifiedPlan: WorkoutPlan)? {
         guard let jsonData = jsonText.data(using: .utf8),
               let obj = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] else { return nil }
 

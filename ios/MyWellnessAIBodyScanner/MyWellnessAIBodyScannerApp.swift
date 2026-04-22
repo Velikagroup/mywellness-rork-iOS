@@ -9,6 +9,7 @@ struct MyWellnessAIBodyScannerApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        initEnvBridge()
         #if DEBUG
         Purchases.logLevel = .debug
         Purchases.configure(withAPIKey: Config.EXPO_PUBLIC_REVENUECAT_TEST_API_KEY)

@@ -1,6 +1,6 @@
 import Foundation
 
-enum DefaultData {
+nonisolated enum DefaultData {
     static func nutritionPlan(for profile: UserProfile) -> NutritionPlan {
         let days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         let dayPlans = days.enumerated().map { index, day in

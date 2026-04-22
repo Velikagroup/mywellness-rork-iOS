@@ -1997,7 +1997,7 @@ struct OnboardingView: View {
                         Button {
                             Task {
                                 let center = UNUserNotificationCenter.current()
-                                try? await center.requestAuthorization(options: [.alert, .sound, .badge])
+                                _ = try? await center.requestAuthorization(options: [.alert, .sound, .badge])
                                 await MainActor.run {
                                     withAnimation { step = 24 }
                                 }

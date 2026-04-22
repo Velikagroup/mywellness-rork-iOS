@@ -46,7 +46,9 @@ struct SupportMailView: UIViewControllerRepresentable {
         init(dismiss: DismissAction) { self.dismiss = dismiss }
 
         nonisolated func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-            controller.dismiss(animated: true)
+            Task { @MainActor in
+                controller.dismiss(animated: true)
+            }
         }
     }
 }

@@ -250,7 +250,7 @@ extension Date {
     }
 }
 
-enum DayNameNormalizer {
+nonisolated enum DayNameNormalizer {
     private static let dayMap: [String: String] = [
         "monday": "Monday", "mon": "Monday", "lunes": "Monday", "lunedì": "Monday", "lunedi": "Monday", "lundi": "Monday", "montag": "Monday", "segunda": "Monday", "segunda-feira": "Monday",
         "tuesday": "Tuesday", "tue": "Tuesday", "martes": "Tuesday", "martedì": "Tuesday", "martedi": "Tuesday", "mardi": "Tuesday", "dienstag": "Tuesday", "terça": "Tuesday", "terça-feira": "Tuesday", "terca": "Tuesday",

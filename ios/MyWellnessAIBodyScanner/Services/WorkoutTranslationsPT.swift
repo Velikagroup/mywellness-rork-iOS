@@ -1,6 +1,6 @@
 import Foundation
 
-enum WorkoutTranslationsPT {
+nonisolated enum WorkoutTranslationsPT {
     static let data = WorkoutTranslationData(
         exerciseNames: exerciseNames,
         focusNames: focusNames,

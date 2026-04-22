@@ -1,11 +1,11 @@
 import UIKit
 import AVFoundation
 
-final class SilentCameraCapture: NSObject, Sendable {
+nonisolated final class SilentCameraCapture: NSObject, @unchecked Sendable {
     private let session = AVCaptureSession()
     private let photoOutput = AVCapturePhotoOutput()
-    nonisolated(unsafe) private var completion: ((UIImage?) -> Void)?
-    nonisolated(unsafe) private var cameraPosition: AVCaptureDevice.Position = .back
+    private var completion: ((UIImage?) -> Void)?
+    private var cameraPosition: AVCaptureDevice.Position = .back
 
     func capture(position: AVCaptureDevice.Position = .back, completion: @escaping (UIImage?) -> Void) {
         self.completion = completion

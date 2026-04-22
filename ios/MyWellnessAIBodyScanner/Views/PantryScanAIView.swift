@@ -845,7 +845,7 @@ struct PantryScanAIView: View {
             let msg: String
             if let aiErr = error as? AIServiceError {
                 switch aiErr {
-                case .networkError(let detail):
+                case .networkError:
                     msg = Lang.s("scanner_err_failed")
                 case .decodingError:
                     msg = Lang.s("scanner_err_decode")

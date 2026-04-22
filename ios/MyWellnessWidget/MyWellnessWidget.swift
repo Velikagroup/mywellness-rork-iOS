@@ -1,9 +1,9 @@
 import WidgetKit
 import SwiftUI
 
-private let appGroupID = "group.app.rork.zdxfa09dhovxfuxepqeqb"
+nonisolated let appGroupID = "group.app.rork.zdxfa09dhovxfuxepqeqb"
 
-private enum WidgetLang {
+nonisolated private enum WidgetLang {
     private static var code: String {
         let lang = Locale.current.language.languageCode?.identifier ?? "en"
         return ["it", "en", "es", "de", "fr", "pt"].contains(lang) ? lang : "en"
