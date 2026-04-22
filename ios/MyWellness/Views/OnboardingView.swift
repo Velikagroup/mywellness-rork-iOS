@@ -2147,7 +2147,16 @@ struct OnboardingView: View {
             }
         }
         .onChange(of: storeVM.isPremium) { _, isPremium in
-            if isPremium {
+            // Avoid tearing down the view while the StoreKit payment sheet is presented
+            // (would dismiss Apple Pay / Face ID auth). Wait until purchase completes.
+            guard isPremium, !storeVM.isPurchasing else { return }
+            EmailAutomationService.shared.cancelCartAbandonment()
+            appVM.hasCompletedOnboarding = true
+            UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+        }
+        .onChange(of: storeVM.isPurchasing) { _, purchasing in
+            // When purchase fully finishes and user is now premium, complete onboarding
+            if !purchasing && storeVM.isPremium {
                 EmailAutomationService.shared.cancelCartAbandonment()
                 appVM.hasCompletedOnboarding = true
                 UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")

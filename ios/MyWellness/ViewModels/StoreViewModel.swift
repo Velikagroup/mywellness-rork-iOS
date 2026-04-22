@@ -34,17 +34,38 @@ class StoreViewModel {
 
     func purchase(package: Package) async {
         isPurchasing = true
+        defer { isPurchasing = false }
         do {
             let result = try await Purchases.shared.purchase(package: package)
             if !result.userCancelled {
                 isPremium = result.customerInfo.entitlements["premium"]?.isActive == true
             }
         } catch ErrorCode.purchaseCancelledError {
+            // user canceled — nothing to do
         } catch ErrorCode.paymentPendingError {
+            // awaiting parental approval or SCA — not a failure
+        } catch ErrorCode.productAlreadyPurchasedError {
+            // already subscribed on this Apple ID — auto-restore
+            do {
+                let info = try await Purchases.shared.restorePurchases()
+                isPremium = info.entitlements["premium"]?.isActive == true
+                if !isPremium {
+                    self.error = "You already have an active subscription. Try Restore Purchases."
+                }
+            } catch {
+                self.error = "You already have an active subscription. Try Restore Purchases."
+            }
+        } catch ErrorCode.receiptAlreadyInUseError {
+            self.error = "This subscription is already in use by another Apple ID. Please sign in with the correct account."
+        } catch ErrorCode.ineligibleError {
+            self.error = "You are not eligible for this offer."
+        } catch ErrorCode.storeProblemError {
+            self.error = "The App Store is temporarily unavailable. Please try again in a moment."
+        } catch ErrorCode.networkError {
+            self.error = "Network error. Check your connection and try again."
         } catch {
             self.error = error.localizedDescription
         }
-        isPurchasing = false
     }
 
     func purchaseMonthly() async {
