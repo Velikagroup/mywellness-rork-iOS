@@ -767,7 +767,7 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 6) {
-                    Slider(value: $speedValue, in: 0.25...1.5, step: 0.05)
+                    Slider(value: $speedValue, in: 0.25...(selectedGender == "Female" ? 2.0 : 1.5), step: 0.05)
                         .tint(Color.black)
                         .padding(.horizontal, 20)
                         .sensoryFeedback(.selection, trigger: speedValue)
