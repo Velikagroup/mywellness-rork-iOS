@@ -1,24 +1,5 @@
 import SwiftUI
 
-private enum WatchLang {
-    private static var code: String {
-        let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        return ["it", "en", "es", "de", "fr", "pt"].contains(lang) ? lang : "en"
-    }
-
-    private static let strings: [String: [String: String]] = [
-        "steps": ["en": "Steps", "it": "Passi", "es": "Pasos", "de": "Schritte", "fr": "Pas", "pt": "Passos"],
-        "sleep": ["en": "Sleep", "it": "Sonno", "es": "Sueño", "de": "Schlaf", "fr": "Sommeil", "pt": "Sono"],
-        "cal": ["en": "Cal", "it": "Cal", "es": "Cal", "de": "Kal", "fr": "Cal", "pt": "Cal"],
-        "bpm": ["en": "BPM", "it": "BPM", "es": "BPM", "de": "BPM", "fr": "BPM", "pt": "BPM"],
-        "health": ["en": "Health", "it": "Salute", "es": "Salud", "de": "Gesundheit", "fr": "Santé", "pt": "Saúde"],
-    ]
-
-    static func s(_ key: String) -> String {
-        strings[key]?[code] ?? strings[key]?["en"] ?? key
-    }
-}
-
 struct ContentView: View {
     @State private var session = WatchSessionService.shared
 
@@ -26,9 +7,19 @@ struct ContentView: View {
         Color(red: session.moodColorR, green: session.moodColorG, blue: session.moodColorB)
     }
 
+    private var auraStyle: WatchAuraView.Style {
+        let s = session.wellnessScore
+        if s >= 0.78 { return .smooth }
+        if s >= 0.55 { return .smooth }
+        if s >= 0.33 { return .gentle }
+        return .wild
+    }
+
     var body: some View {
         ZStack {
-            constellationStats
+            WatchAuraView(color: moodColor, style: auraStyle)
+                .ignoresSafeArea()
+
             memojiRingSection
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -36,35 +27,35 @@ struct ContentView: View {
     }
 
     private var memojiRingSection: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 6) {
             ZStack {
                 Circle()
-                    .stroke(Color.gray.opacity(0.22), lineWidth: 6)
-                    .frame(width: 94, height: 94)
+                    .stroke(Color.gray.opacity(0.22), lineWidth: 7)
+                    .frame(width: 122, height: 122)
 
                 Circle()
                     .trim(from: 0, to: session.wellnessScore)
                     .stroke(
                         moodColor,
-                        style: StrokeStyle(lineWidth: 6, lineCap: .round)
+                        style: StrokeStyle(lineWidth: 7, lineCap: .round)
                     )
-                    .frame(width: 94, height: 94)
+                    .frame(width: 122, height: 122)
                     .rotationEffect(.degrees(-90))
 
                 if let data = session.memojiData, let uiImage = UIImage(data: data) {
                     Image(uiImage: removeWhiteBackground(from: uiImage) ?? uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 76, height: 76)
+                        .frame(width: 99, height: 99)
                 } else {
                     Image(systemName: "face.smiling")
-                        .font(.system(size: 30, weight: .medium))
+                        .font(.system(size: 40, weight: .medium))
                         .foregroundStyle(moodColor)
                 }
             }
 
             Text("\(Int(session.wellnessScore * 100))%")
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .font(.system(size: 15, weight: .bold, design: .rounded))
                 .foregroundStyle(moodColor)
         }
     }
@@ -84,88 +75,96 @@ struct ContentView: View {
             let r = pixelData[i]
             let g = pixelData[i + 1]
             let b = pixelData[i + 2]
-            if r > 240 && g > 240 && b > 240 {
+            if r > 230 && g > 230 && b > 230 {
                 pixelData[i + 3] = 0
-            } else if r > 220 && g > 220 && b > 220 {
+            } else if r > 200 && g > 200 && b > 200 {
                 let minC = min(r, min(g, b))
                 let distance = 255 - Int(minC)
-                pixelData[i + 3] = UInt8(min(255, distance * 8))
+                pixelData[i + 3] = UInt8(min(255, distance * 6))
             }
         }
         guard let output = context.makeImage() else { return nil }
         return UIImage(cgImage: output, scale: image.scale, orientation: image.imageOrientation)
     }
-
-    private var constellationStats: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .top) {
-                ConstellationStat(
-                    icon: "figure.walk",
-                    value: session.steps > 0 ? formatNumber(Double(session.steps)) : "--",
-                    label: WatchLang.s("steps"),
-                    color: .blue
-                )
-                Spacer(minLength: 0)
-                ConstellationStat(
-                    icon: "heart.fill",
-                    value: session.bpm > 25 ? "\(session.bpm)" : "--",
-                    label: WatchLang.s("bpm"),
-                    color: .red
-                )
-            }
-            Spacer(minLength: 0)
-            HStack(alignment: .bottom) {
-                ConstellationStat(
-                    icon: "moon.zzz.fill",
-                    value: session.sleepHours > 0 ? String(format: "%.1f", session.sleepHours) : "--",
-                    label: WatchLang.s("sleep"),
-                    color: .indigo
-                )
-                Spacer(minLength: 0)
-                ConstellationStat(
-                    icon: "bolt.fill",
-                    value: session.activeCalories > 0 ? "\(session.activeCalories)" : "--",
-                    label: WatchLang.s("cal"),
-                    color: .orange
-                )
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    private func formatNumber(_ value: Double) -> String {
-        if value >= 10000 {
-            return String(format: "%.1fk", value / 1000)
-        }
-        return "\(Int(value))"
-    }
 }
 
-private struct ConstellationStat: View {
-    let icon: String
-    let value: String
-    let label: String
+struct WatchAuraView: View {
     let color: Color
+    let style: Style
+
+    enum Style { case smooth, gentle, wild }
 
     var body: some View {
-        VStack(spacing: 1) {
-            HStack(spacing: 3) {
-                Image(systemName: icon)
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(color)
-                Text(value)
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-                    .foregroundStyle(.primary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
+        TimelineView(.animation) { timeline in
+            let t = timeline.date.timeIntervalSinceReferenceDate
+            Canvas { context, size in
+                let cx = size.width / 2
+                let cy = size.height / 2
+                let baseR = min(size.width, size.height) * 0.38
+
+                for i in 0..<5 {
+                    let di = Double(i)
+                    let ringR = baseR + di * 9.0
+                    let opacity = 0.32 - di * 0.04
+                    let lineW = 1.4
+
+                    switch style {
+                    case .smooth:
+                        let rot = t * 0.25 + di * 0.3
+                        let pulse = sin(t * 1.2 + di * 0.5) * 2.5
+                        let r = ringR + pulse
+                        var path = Path()
+                        let steps = 120
+                        for j in 0...steps {
+                            let angle = Double(j) / Double(steps) * 2.0 * .pi + rot
+                            let x = cx + r * cos(angle)
+                            let y = cy + r * sin(angle)
+                            if j == 0 { path.move(to: CGPoint(x: x, y: y)) }
+                            else { path.addLine(to: CGPoint(x: x, y: y)) }
+                        }
+                        path.closeSubpath()
+                        context.stroke(path, with: .color(color.opacity(opacity)), lineWidth: lineW)
+
+                    case .gentle:
+                        let rot = t * 0.35 + di * 0.4
+                        let wavePhase = t * 1.0 + di * 0.6
+                        let waveAmp = 3.0 + di * 0.8
+                        let waveFreq = 5.0 + di * 0.8
+                        var path = Path()
+                        let steps = 140
+                        for j in 0...steps {
+                            let angle = Double(j) / Double(steps) * 2.0 * .pi
+                            let wave = waveAmp * sin(waveFreq * angle + wavePhase)
+                            let r = ringR + wave
+                            let x = cx + r * cos(angle + rot)
+                            let y = cy + r * sin(angle + rot)
+                            if j == 0 { path.move(to: CGPoint(x: x, y: y)) }
+                            else { path.addLine(to: CGPoint(x: x, y: y)) }
+                        }
+                        path.closeSubpath()
+                        context.stroke(path, with: .color(color.opacity(opacity)), lineWidth: lineW)
+
+                    case .wild:
+                        let rot = t * 0.5 + di * 0.3
+                        let wavePhase = t * 1.6 + di * 0.4
+                        let waveAmp = 5.0 + di * 1.4
+                        let waveFreq = 7.0 + di * 1.0
+                        var path = Path()
+                        let steps = 140
+                        for j in 0...steps {
+                            let angle = Double(j) / Double(steps) * 2.0 * .pi
+                            let wave = waveAmp * sin(waveFreq * angle + wavePhase)
+                            let r = ringR + wave
+                            let x = cx + r * cos(angle + rot)
+                            let y = cy + r * sin(angle + rot)
+                            if j == 0 { path.move(to: CGPoint(x: x, y: y)) }
+                            else { path.addLine(to: CGPoint(x: x, y: y)) }
+                        }
+                        path.closeSubpath()
+                        context.stroke(path, with: .color(color.opacity(opacity)), lineWidth: lineW)
+                    }
+                }
             }
-            Text(label)
-                .font(.system(size: 9, weight: .medium))
-                .foregroundStyle(.secondary)
-                .lineLimit(1)
         }
-        .fixedSize()
     }
 }
