@@ -1108,8 +1108,8 @@ nonisolated struct AIService: Sendable {
     private static func analyzePantryBothImages(url: URL, frontBase64: String, nutritionBase64: String) async throws -> PantryProductResult {
         let prompt = "Analyze these 2 photos of the SAME food product. Photo 1=front label (read name, brand). Photo 2=nutrition table (read kcal, protein, carbs, fat, fiber, sugars, saturated fat per 100g). Return ONLY raw JSON: {\"productName\":\"Name\",\"brand\":\"Brand\",\"category\":\"Category\",\"servingSize\":\"100g\",\"calories\":123,\"protein\":10.5,\"carbs\":20.3,\"fat\":5.2,\"fiber\":2.0,\"sugars\":8.1,\"saturatedFat\":1.5} category must be one of: Meat and Fish, Fruits and Vegetables, Dairy and Eggs, Grains and Pasta, Legumes and Nuts, Condiments and Spices. calories=integer, others=decimal. Use 0 if unreadable."
 
-        let body = buildImageRequestBody(prompt: prompt, imageBase64Strings: [frontBase64, nutritionBase64])
-        let rawText = try await sendToolkitRequest(url: url, body: body, timeout: 120)
+        let body = buildVercelImageBody(prompt: prompt, imageBase64Strings: [frontBase64, nutritionBase64])
+        let rawText = try await sendVercelChatRequest(body: body, timeout: 120)
         let jsonText = extractJSON(from: rawText)
 
         guard let jsonData = jsonText.data(using: .utf8),
@@ -1123,8 +1123,8 @@ nonisolated struct AIService: Sendable {
     private static func analyzePantrySingleImage(url: URL, imageBase64: String, imageType: String) async throws -> PantryProductResult {
         let prompt = "Analyze this photo of a \(imageType). Extract product name, brand, nutritional values per 100g. Return ONLY raw JSON: {\"productName\":\"Name\",\"brand\":\"Brand\",\"category\":\"Category\",\"servingSize\":\"100g\",\"calories\":123,\"protein\":10.5,\"carbs\":20.3,\"fat\":5.2,\"fiber\":2.0,\"sugars\":8.1,\"saturatedFat\":1.5} category: Meat and Fish|Fruits and Vegetables|Dairy and Eggs|Grains and Pasta|Legumes and Nuts|Condiments and Spices. calories=integer, others=decimal. Use 0 if unknown."
 
-        let body = buildImageRequestBody(prompt: prompt, imageBase64Strings: [imageBase64])
-        let rawText = try await sendToolkitRequest(url: url, body: body, timeout: 90)
+        let body = buildVercelImageBody(prompt: prompt, imageBase64Strings: [imageBase64])
+        let rawText = try await sendVercelChatRequest(body: body, timeout: 90)
         let jsonText = extractJSON(from: rawText)
 
         guard let jsonData = jsonText.data(using: .utf8),
@@ -1151,6 +1151,80 @@ nonisolated struct AIService: Sendable {
 
     static func buildTextRequestBody(prompt: String) -> [String: Any] {
         return [
+            "messages": [["role": "user", "content": prompt]]
+        ]
+    }
+
+    private static var vercelChatEndpoint: String {
+        env_toolkitURL + "/v2/vercel/v1/chat/completions"
+    }
+
+    static func sendVercelChatRequest(body: [String: Any], timeout: TimeInterval) async throws -> String {
+        guard !env_toolkitURL.isEmpty, let url = URL(string: vercelChatEndpoint) else {
+            throw AIServiceError.invalidURL
+        }
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = timeout
+        config.timeoutIntervalForResource = timeout + 30
+        let session = URLSession(configuration: config)
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(env_rorkToolkitSecretKey)", forHTTPHeaderField: "Authorization")
+        request.timeoutInterval = timeout
+        guard let httpBody = try? JSONSerialization.data(withJSONObject: body) else {
+            throw AIServiceError.networkError("Error preparing the request.")
+        }
+        request.httpBody = httpBody
+        let (data, response): (Data, URLResponse)
+        do {
+            (data, response) = try await session.data(for: request)
+        } catch let urlError as URLError {
+            if urlError.code == .timedOut {
+                throw AIServiceError.networkError("Server timeout. Please try again.")
+            }
+            if urlError.code == .networkConnectionLost || urlError.code == .notConnectedToInternet {
+                throw AIServiceError.networkError("Connection lost. Check your internet connection.")
+            }
+            throw AIServiceError.networkError("Connection failed. Try again.")
+        } catch {
+            throw AIServiceError.networkError("Network error: \(error.localizedDescription)")
+        }
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            let code = httpResponse.statusCode
+            if code == 413 { throw AIServiceError.networkError("Photos too large. Try again.") }
+            if code >= 500 { throw AIServiceError.networkError("Server unavailable (\(code)). Try again.") }
+            let errorBody = String(data: data, encoding: .utf8) ?? ""
+            throw AIServiceError.networkError("Server error (\(code)): \(errorBody.prefix(200))")
+        }
+        guard let rawText = String(data: data, encoding: .utf8), !rawText.isEmpty else {
+            throw AIServiceError.noContent
+        }
+        if let jsonData = rawText.data(using: .utf8),
+           let obj = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+           let choices = obj["choices"] as? [[String: Any]],
+           let message = choices.first?["message"] as? [String: Any],
+           let content = message["content"] as? String {
+            return content
+        }
+        return rawText
+    }
+
+    private static func buildVercelImageBody(prompt: String, imageBase64Strings: [String]) -> [String: Any] {
+        var content: [[String: Any]] = [["type": "text", "text": prompt]]
+        for base64 in imageBase64Strings {
+            let dataURI = "data:image/jpeg;base64," + base64
+            content.append(["type": "image_url", "image_url": ["url": dataURI]])
+        }
+        return [
+            "model": "google/gemini-3-flash",
+            "messages": [["role": "user", "content": content]]
+        ]
+    }
+
+    private static func buildVercelTextBody(prompt: String) -> [String: Any] {
+        return [
+            "model": "google/gemini-3-flash",
             "messages": [["role": "user", "content": prompt]]
         ]
     }
@@ -1376,10 +1450,6 @@ nonisolated struct AIService: Sendable {
             return try await lookupBarcodeWithKimi(barcode)
         }
 
-        guard !toolkitURL.isEmpty, let url = URL(string: toolkitURL + "/agent/chat") else {
-            throw AIServiceError.networkError("Prodotto non trovato nel database")
-        }
-
         let exampleJSON = "{\"productName\":\"Barilla Spaghetti n.5\",\"brand\":\"Barilla\",\"category\":\"Grains and Pasta\",\"servingSize\":\"100g\",\"calories\":356,\"protein\":12.5,\"carbs\":71.2,\"fat\":1.5,\"fiber\":3.0,\"sugars\":3.5,\"saturatedFat\":0.3}"
 
         let prompt = """
@@ -1398,8 +1468,8 @@ nonisolated struct AIService: Sendable {
         - If you don't know the product, return productName as "Unknown"
         """
 
-        let body = buildTextRequestBody(prompt: prompt)
-        let rawText = try await sendToolkitRequest(url: url, body: body, timeout: 60)
+        let body = buildVercelTextBody(prompt: prompt)
+        let rawText = try await sendVercelChatRequest(body: body, timeout: 60)
         let jsonText = extractJSON(from: rawText)
 
         guard let jsonData = jsonText.data(using: .utf8),

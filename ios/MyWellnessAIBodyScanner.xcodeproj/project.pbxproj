@@ -596,11 +596,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
+				ENABLE_PREVIEWS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				GOOGLE_IOS_CLIENT_ID = "51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8.apps.googleusercontent.com";
 				GOOGLE_REVERSED_CLIENT_ID = "com.googleusercontent.apps.51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8";
-				INFOPLIST_FILE = MyWellness/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MyWellness - Ai Body Scanner";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "MyWellness uses the camera to analyze food calories, scan nutrition labels, and take photos for body scan.";
@@ -638,11 +637,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = "";
-				ENABLE_PREVIEWS = YES;
+				ENABLE_PREVIEWS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				GOOGLE_IOS_CLIENT_ID = "51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8.apps.googleusercontent.com";
 				GOOGLE_REVERSED_CLIENT_ID = "com.googleusercontent.apps.51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8";
-				INFOPLIST_FILE = MyWellness/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MyWellness - Ai Body Scanner";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "MyWellness uses the camera to analyze food calories, scan nutrition labels, and take photos for body scan.";
@@ -762,7 +760,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyWellnessAIBodyScannerWatch/MyWellnessAIBodyScannerWatch.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 29;
-				ENABLE_PREVIEWS = YES;
+				ENABLE_PREVIEWS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
@@ -814,7 +812,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyWellnessAIBodyScannerWatch/MyWellnessAIBodyScannerWatch.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 29;
-				ENABLE_PREVIEWS = YES;
+				ENABLE_PREVIEWS = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
