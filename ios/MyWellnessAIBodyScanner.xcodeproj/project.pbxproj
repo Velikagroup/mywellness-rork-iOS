@@ -600,6 +600,8 @@
 				GOOGLE_IOS_CLIENT_ID = "51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8.apps.googleusercontent.com";
 				GOOGLE_REVERSED_CLIENT_ID = "com.googleusercontent.apps.51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8";
 				INFOPLIST_FILE = MyWellnessAIBodyScanner/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "MyWellness reads your health data to personalize your wellness insights and track your progress.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "MyWellness writes workout and body measurement data to Apple Health so you can track your progress alongside your other health metrics.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -630,6 +632,8 @@
 				GOOGLE_IOS_CLIENT_ID = "51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8.apps.googleusercontent.com";
 				GOOGLE_REVERSED_CLIENT_ID = "com.googleusercontent.apps.51803361930-dsuth5vpuhti999jaf8ultr05sc9rut8";
 				INFOPLIST_FILE = MyWellnessAIBodyScanner/Info.plist;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "MyWellness reads your health data to personalize your wellness insights and track your progress.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "MyWellness writes workout and body measurement data to Apple Health so you can track your progress alongside your other health metrics.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
